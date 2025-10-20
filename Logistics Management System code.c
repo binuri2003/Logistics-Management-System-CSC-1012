@@ -3,10 +3,19 @@
 #include <string.h>
 
 #define MAX_CITIES 30
+#define CITY_N_LENTH 50
 #define MAX_DELIVERIES 50
+#define CITY_FILE "cities.txt"++
+
 
 //function declaration
 void cityManagement();
+void addCity();
+void renameCity();
+void removeCity();
+void viewCities();
+void loadCities();
+void saveCities();
 void distanceManagement();
 void vehicleInfo();
 void deliveryRequest();
@@ -81,6 +90,49 @@ int main()
     return 0;
 }
 void cityManagement() {
+    int choice;
+    int count=0;
+    char cities[MAX_CITIES][CITY_N_LENTH];
+    loadCities(cities, &count);
+
+        printf("\nCITY MANAGEMENT\n");
+        printf("\n==========================\n");
+        printf("1. Add City\n");
+        printf("2. Rename City\n");
+        printf("3. Remove City\n");
+        printf("4. View All Cities\n");
+        printf("5. Return to Main Menu\n");
+        printf("6. Exit\n");
+
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+         switch (choice) {
+            case 1:
+                addCity(cities, &count);
+                break;
+            case 2:
+                renameCity(cities, count);
+                break;
+            case 3:
+                removeCity(cities, &count);
+                break;
+            case 4:
+                viewCities(cities, count);
+                break;
+            case 5:
+                saveCities(cities, count);
+                printf("Returning to main menu...\n");
+                main();
+                break;
+              case 6:
+                exitProgram();
+                break;
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+
+
 }
 
 void distanceManagement(){
@@ -121,4 +173,16 @@ void exitProgram(){
             printf("Invalid input! Please enter Y or N.\n");
         }
     }
-
+//cityManagement function's sub function
+void loadCities(char cities[][CITY_N_LENTH],int *count){
+}
+void saveCities(char cities[][CITY_N_LENTH],int count){
+}
+void addCity(char cities[][CITY_N_LENTH],int *count){
+}
+void renameCity(char cities[][CITY_N_LENTH],int count){
+}
+void removeCity(char cities[][CITY_N_LENTH],int *count){
+}
+void viewCities(char cities[][CITY_N_LENTH],int count){
+}
