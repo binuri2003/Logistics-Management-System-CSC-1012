@@ -6,10 +6,10 @@
 #define MAX_DELIVERIES 50
 
 //function declaration
-void cityMenu();
-void distanceMenu();
+void cityManagement();
+void distanceManagement();
 void vehicleInfo();
-void deliveryMenu();
+void deliveryRequest();
 void viewDeliveries();
 void routeFinder();
 void reports();
@@ -21,8 +21,10 @@ void exitProgram();
 
 int main()
 {
+
     int choice;
 
+    while (1){
     printf("==============================\n");
     printf("LOGISTICS MANAGEMENT SYSTEM\n");
     printf("==============================\n");
@@ -37,21 +39,21 @@ int main()
     printf("9. Save\n");
     printf("10. Exit\n");
 
-    printf("Enter your Choice (1-10)");
+    printf("Enter your Choice (1-10):\n");
     scanf("%d",&choice);
 
     switch(choice){
             case 1:
-                cityMenu();
+                cityManagement();
             break;
             case 2:
-                distanceMenu();
+                distanceManagement();
              break;
             case 3:
                  vehicleInfo();
             break;
             case 4:
-                deliveryMenu();
+                deliveryRequest();
              break;
             case 5:
                 viewDeliveries();
@@ -69,22 +71,23 @@ int main()
              break;
             case 10:
                 exitProgram();
+                return 0;
+
              break;
             default:
                  printf("Invalid choice!\n");
 }
-
-
+    }
     return 0;
 }
-void cityMenu() {
+void cityManagement() {
 }
 
-void distanceMenu(){
+void distanceManagement(){
 }
 void vehicleInfo(){
 }
-void deliveryMenu(){
+void deliveryRequest(){
 }
 void viewDeliveries(){
 }
@@ -97,4 +100,25 @@ void help(){
 void save(){
 }
 void exitProgram(){
-}
+    char choice;
+
+
+        printf("\nAre you sure you want to exit? (Y/N): ");
+        scanf(" %c", &choice);
+
+        if (choice == 'Y' || choice == 'y')
+        {
+            printf("\nExiting program...\n");
+            exit(0);
+        }
+        else if (choice == 'N' || choice == 'n')
+        {
+            printf("\nReturning to main menu...\n");
+            main();
+        }
+        else
+        {
+            printf("Invalid input! Please enter Y or N.\n");
+        }
+    }
+
