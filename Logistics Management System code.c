@@ -6,6 +6,7 @@
 #define CITY_N_LENTH 50
 #define MAX_DELIVERIES 50
 #define CITY_FILE "cities.txt"
+#define DIST_FILE "distances.txt"
 
 
 //function declaration
@@ -25,6 +26,8 @@ void reports();
 void help();
 void save();
 void exitProgram();
+void loadDistances();
+void saveDistances();
 
 
 
@@ -136,6 +139,95 @@ void cityManagement() {
 }
 
 void distanceManagement(){
+    int distance[MAX_CITIES][MAX_CITIES];
+    char cities[MAX_CITIES][CITY_N_LENTH];
+    int count = 0;
+    int choice;
+
+    loadCities(cities, &count);
+    if (count < 2) {
+        printf("At least two cities are needed!\n");
+        return;
+    }
+
+    loadDistances(distance, count);
+
+
+        printf("      DISTANCE MANAGEMENT    \n");
+        printf("=============================\n");
+        printf("1. Input or Edit Distance\n");
+        printf("2. View Distance Table\n");
+        printf("3. Return to Main Menu\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: {
+                int i, j, d;
+                printf("\nAvailable Cities:\n");
+                for (int k = 0; k < count; k++) {
+                    printf("%d. %s\n", k + 1, cities[k]);
+                }
+
+                printf("Enter source city number: ");
+                scanf("%d", &i);
+                printf("Enter destination city number: ");
+                scanf("%d", &j);
+
+                if (i < 1 || i > count || j < 1 || j > count) {
+                    printf("Invalid city numbers!\n");
+                    break;
+                }
+
+                if (i == j) {
+                    printf("Distance from a city to itself is  0 km.\n");
+                    distance[i - 1][j - 1] = 0;
+                    break;
+                }
+
+                printf("Enter distance between %s and %s (in km): ", cities[i - 1], cities[j - 1]);
+                scanf("%d", &d);
+
+                distance[i - 1][j - 1] = d;
+                distance[j - 1][i - 1] = d;
+
+                saveDistances(distance, count);
+                printf("Distance added successfully and saved!\n");
+                break;
+                }
+
+            case 2: {
+                printf("\n%-20s", " ");
+                for (int i = 0; i < count; i++) {
+                    printf("%-15s", cities[i]);
+                }
+                printf("\n");
+
+                for (int i = 0; i < count; i++) {
+                    printf("%-20s", cities[i]);
+                    for (int j = 0; j < count; j++) {
+                        printf("%-15d", distance[i][j]);
+                    }
+                    printf("\n");
+                }
+                break;
+            }
+
+            case 3:
+                printf("Returning to main menu...\n");
+                main();
+                return;
+
+            case 4:
+                exitProgram();
+                return;
+
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+
+
 }
 void vehicleInfo(){
 }
@@ -288,4 +380,36 @@ void viewCities(char cities[][CITY_N_LENTH],int count){
         printf("%d. %s\n", i + 1, cities[i]);
     }
 }
+// Distance management sub functions
+void loadDistances(int distance[MAX_CITIES][MAX_CITIES], int cityCount) {
+    FILE *fp = fopen(DIST_FILE, "r");
+    if (fp == NULL) {
+        for (int i = 0; i < cityCount; i++)
+            for (int j = 0; j < cityCount; j++)
+                distance[i][j] = 0;
+        return;
+    }
 
+    for (int i = 0; i < cityCount; i++) {
+        for (int j = 0; j < cityCount; j++) {
+            fscanf(fp, "%d", &distance[i][j]);
+        }
+    }
+    fclose(fp);
+}
+
+void saveDistances(int distance[MAX_CITIES][MAX_CITIES], int cityCount) {
+    FILE *fp = fopen(DIST_FILE, "w");
+    if (fp == NULL) {
+        printf("Error saving distances!\n");
+        return;
+    }
+
+    for (int i = 0; i < cityCount; i++) {
+        for (int j = 0; j < cityCount; j++) {
+            fprintf(fp, "%d ", distance[i][j]);
+        }
+        fprintf(fp, "\n");
+    }
+    fclose(fp);
+}
