@@ -5,7 +5,7 @@
 #define MAX_CITIES 30
 #define CITY_N_LENTH 50
 #define MAX_DELIVERIES 50
-#define CITY_FILE "cities.txt"++
+#define CITY_FILE "cities.txt"
 
 
 //function declaration
@@ -33,7 +33,7 @@ int main()
 
     int choice;
 
-    while (1){
+
     printf("==============================\n");
     printf("LOGISTICS MANAGEMENT SYSTEM\n");
     printf("==============================\n");
@@ -86,7 +86,7 @@ int main()
             default:
                  printf("Invalid choice!\n");
 }
-    }
+
     return 0;
 }
 void cityManagement() {
@@ -175,10 +175,41 @@ void exitProgram(){
     }
 //cityManagement function's sub function
 void loadCities(char cities[][CITY_N_LENTH],int *count){
+    FILE *fp = fopen(CITY_FILE,"r");
+    if (fp==NULL)return;
+
+    while (fgets(cities[*count], CITY_NAME_LEN, fp)) {
+        cities[*count][strcspn(cities[*count], "\n")] = '\0';
+        (*count)++;
+    }
+    fclose(fp);
+}
+
 }
 void saveCities(char cities[][CITY_N_LENTH],int count){
+    FILE *fp = fopen(CITY_FILE, "w");
+    if (fp == NULL) {
+        printf("SAVING ERROR!\n");
+        return;
+    }
+
+    for (int i = 0; i < count; i++) {
+        fprintf(fp, "%s\n", cities[i]);
+    }
+    fclose(fp);
 }
 void addCity(char cities[][CITY_N_LENTH],int *count){
+    if(*count>= MAX_CITIES){
+        printf("LIMIT EXCEEDED (MAX %d)!\n",MAX_CITIES);
+        return;
+    }
+    printf("Enter new city name: ");
+    fgets(cities[*count], CITY_NAME_LEN, stdin);
+    cities[*count][strcspn(cities[*count], "\n")] = '\0';
+
+    (*count)++;
+    saveCities(cities, *count);
+    printf("City added successfully!\n");
 }
 void renameCity(char cities[][CITY_N_LENTH],int count){
 }
