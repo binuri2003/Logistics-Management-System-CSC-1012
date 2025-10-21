@@ -178,14 +178,14 @@ void loadCities(char cities[][CITY_N_LENTH],int *count){
     FILE *fp = fopen(CITY_FILE,"r");
     if (fp==NULL)return;
 
-    while (fgets(cities[*count], CITY_NAME_LEN, fp)) {
+    while (fgets(cities[*count], CITY_N_LENTH, fp)) {
         cities[*count][strcspn(cities[*count], "\n")] = '\0';
         (*count)++;
     }
     fclose(fp);
 }
 
-}
+
 void saveCities(char cities[][CITY_N_LENTH],int count){
     FILE *fp = fopen(CITY_FILE, "w");
     if (fp == NULL) {
@@ -198,22 +198,94 @@ void saveCities(char cities[][CITY_N_LENTH],int count){
     }
     fclose(fp);
 }
-void addCity(char cities[][CITY_N_LENTH],int *count){
-    if(*count>= MAX_CITIES){
-        printf("LIMIT EXCEEDED (MAX %d)!\n",MAX_CITIES);
+void addCity(char cities[][CITY_N_LENTH], int *count) {
+    if (*count >= MAX_CITIES) {
+        printf("LIMIT EXCEEDED (MAX %d)!\n", MAX_CITIES);
         return;
     }
+
     printf("Enter new city name: ");
-    fgets(cities[*count], CITY_NAME_LEN, stdin);
+
+
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) { }
+
+
+    if (fgets(cities[*count], CITY_N_LENTH, stdin) == NULL) {
+        printf("Input error!\n");
+        return;
+    }
+
     cities[*count][strcspn(cities[*count], "\n")] = '\0';
 
     (*count)++;
     saveCities(cities, *count);
     printf("City added successfully!\n");
 }
+
+
 void renameCity(char cities[][CITY_N_LENTH],int count){
+     if (count == 0) {
+        printf("No cities available!.\n");
+        return;
+     }
+        viewCities(cities, count);
+
+    int index;
+
+    printf("Enter city number to rename: ");
+    scanf("%d", &index);
+
+    if (index < 1 || index > count) {
+        printf("Invalid Index!\n");
+        return;
+    }
+
+    printf("Enter new city name: ");
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) { }
+
+    fgets(cities[index - 1], CITY_N_LENTH, stdin);
+    cities[index - 1][strcspn(cities[index - 1], "\n")] = '\0';
+
+    saveCities(cities, count);
+    printf("City renamed successfully!\n");
+
 }
 void removeCity(char cities[][CITY_N_LENTH],int *count){
+  if (*count == 0) {
+        printf("No cities available!.\n");
+        return;
+  }
+
+       viewCities(cities,*count);
+       int index;
+       printf("Enter city number to remove: ");
+       scanf("%d", &index);
+
+    if (index < 1 || index > *count) {
+        printf("Invalid number!\n");
+        return;
+    }
+
+    for (int i = index - 1; i < *count - 1; i++) {
+        strcpy(cities[i], cities[i + 1]);
+    }
+    (*count)--;
+
+    saveCities(cities, *count);
+    printf("City removed successfully!\n");
 }
+
 void viewCities(char cities[][CITY_N_LENTH],int count){
+    if (count == 0) {
+        printf("No cities available!.\n");
+        return;
+    }
+
+    printf("\n====List of Cities====\n");
+    for (int i = 0; i < count; i++) {
+        printf("%d. %s\n", i + 1, cities[i]);
+    }
 }
+
