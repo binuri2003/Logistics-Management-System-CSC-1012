@@ -230,6 +230,48 @@ void distanceManagement(){
 
 }
 void vehicleInfo(){
+    char vehicle_names[3][10] = {"Van", "Truck", "Lorry"};
+    int capacity[3] = {1000, 5000, 10000};
+    int rate_per_km[3] = {30, 40, 80};
+    int speed[3] = {60, 50, 45};
+    int fuel_efficiency[3] = {12, 6, 4};
+    int choice;
+
+    while (1) {
+        printf("\n===== VEHICLE INFORMATION =====\n");
+        printf("1. View all vehicles\n");
+        printf("2. Return to Main Menu\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("\n=== VEHICLES ===\n");
+                printf("Type\tCapacity(kg)\tRate per km(LKR)\tAvg Speed(km/h)\tFuel Efficiency(km/l)\n");
+                for (int i = 0; i < 3; i++) {
+                    printf("%s\t%d\t\t%d\t\t%d\t\t%d\n",
+                           vehicle_names[i],
+                           capacity[i],
+                           rate_per_km[i],
+                           speed[i],
+                           fuel_efficiency[i]);
+                }
+                break;
+
+            case 2:
+                printf("\nReturning to main menu...\n");
+                main();
+                return;
+            case 3:
+                exitProgram();
+                return;
+
+            default:
+                printf("Invalid choice! Please enter 1–3.\n");
+        }
+    }
+
 }
 void deliveryRequest(){
 }
