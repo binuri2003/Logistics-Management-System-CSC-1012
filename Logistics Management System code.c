@@ -8,6 +8,13 @@
 #define CITY_FILE "cities.txt"
 #define DIST_FILE "distances.txt"
 
+char vehicle_names[3][10] = {"Van", "Truck", "Lorry"};
+    int capacity[3] = {1000, 5000, 10000};
+    int rate_per_km[3] = {30, 40, 80};
+    int speed[3] = {60, 50, 45};
+    int fuel_efficiency[3] = {12, 6, 4};
+    float fuel_price = 310.0;
+
 
 //function declaration
 void cityManagement();
@@ -230,11 +237,7 @@ void distanceManagement(){
 
 }
 void vehicleInfo(){
-    char vehicle_names[3][10] = {"Van", "Truck", "Lorry"};
-    int capacity[3] = {1000, 5000, 10000};
-    int rate_per_km[3] = {30, 40, 80};
-    int speed[3] = {60, 50, 45};
-    int fuel_efficiency[3] = {12, 6, 4};
+
     int choice;
 
     while (1) {
@@ -274,6 +277,66 @@ void vehicleInfo(){
 
 }
 void deliveryRequest(){
+ char cities[MAX_CITIES][CITY_N_LENTH];
+ int distance[MAX_CITIES][MAX_CITIES];
+ int cityCount = 0;
+
+ loadCities(cities, &cityCount);
+ loadDistances(distance, cityCount);
+
+ int choice;
+ printf("\n===== DELIVERY REQUEST HANDLING =====\n");
+        printf("1. New Delivery\n");
+        printf("2. Return to Main Menu\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+         switch (choice) {
+            case 1: {
+                int src, dest, vType;
+                float weight;
+
+                printf("\nAvailable Cities:\n");
+                for (int i = 0; i < cityCount; i++) {
+                    printf("%d. %s\n", i + 1, cities[i]);
+                }
+
+                printf("\nEnter Source City Number: ");
+                scanf("%d", &src);
+                printf("Enter Destination City Number: ");
+                scanf("%d", &dest);
+
+                if (src < 1 || src > cityCount || dest < 1 || dest > cityCount) {
+                    printf("Invalid city numbers!\n");
+                    break;
+                }
+                if (src == dest) {
+                         printf("Source and destination cannot be the same!\n");
+                    break;
+                }
+
+                printf("\nSelect Vehicle Type:\n1. Van\n2. Truck\n3. Lorry\nEnter type: ");
+                scanf("%d", &vType);
+
+                if (vType < 1 || vType > 3) {
+                    printf("Invalid vehicle type!\n");
+                    break;
+                }
+
+                printf("Enter Weight (in kg): ");
+                scanf("%f", &weight);
+
+                if (weight > capacity[vType - 1]) {
+                    printf("Weight exceeds capacity of %s (%d kg)!\n",
+                           vehicle_names[vType - 1], capacity[vType - 1]);
+                    break;
+int D = distance[src - 1][dest - 1];
+                if (D <= 0) {
+                    printf("No valid distance found between %s and %s.\n",
+                           cities[src - 1], cities[dest - 1]);
+                    break;
+                }
+
 }
 void viewDeliveries(){
 }
