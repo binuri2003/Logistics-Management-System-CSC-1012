@@ -347,6 +347,26 @@ float totalCost = deliveryCost + fuelCost;
 float profit = deliveryCost * 0.25;
 float customerCharge = totalCost + profit;
 float timeHrs =D / S;
+printf("\n======================================================\n");
+                printf("DELIVERY COST ESTIMATION\n");
+                printf("------------------------------------------------------\n");
+                printf("From: %s\n", cities[src - 1]);
+                printf("To: %s\n", cities[dest - 1]);
+                printf("Minimum Distance: %d km\n", D);
+                printf("Vehicle: %s\n", vehicle_names[vType - 1]);
+                printf("Weight: %.0f kg\n", W);
+                printf("------------------------------------------------------\n");
+                printf("Base Cost: %d × %.0f × (1 + %.0f/10000) = %.2f LKR\n",
+                       D, R, W, deliveryCost);
+                printf("Fuel Used: %.2f L\n", fuelUsed);
+                printf("Fuel Cost: %.2f LKR\n", fuelCost);
+                printf("Operational Cost: %.2f LKR\n", totalCost);
+                printf("Profit: %.2f LKR\n", profit);
+                printf("Customer Charge: %.2f LKR\n", customerCharge);
+                printf("Estimated Time: %.2f hours\n", timeHrs);
+                printf("======================================================\n");
+                break;
+            }
 }
 void viewDeliveries(){
 }
