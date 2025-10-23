@@ -367,6 +367,19 @@ printf("\n======================================================\n");
                 printf("======================================================\n");
                 break;
             }
+            case 2:
+                printf("\nReturning to main menu...\n");
+                main();
+                return;
+
+            case 3:
+                exitProgram();
+                return;
+
+            default:
+                printf("Invalid choice! Please enter 1–3.\n");
+        }
+    }
 }
 void viewDeliveries(){
 }
