@@ -294,7 +294,7 @@ void deliveryRequest(){
          switch (choice) {
             case 1: {
                 int src, dest, vType;
-                float weight;
+                float W;
 
                 printf("\nAvailable Cities:\n");
                 for (int i = 0; i < cityCount; i++) {
@@ -324,7 +324,7 @@ void deliveryRequest(){
                 }
 
                 printf("Enter Weight (in kg): ");
-                scanf("%f", &weight);
+                scanf("%f", &W);
 
                 if (weight > capacity[vType - 1]) {
                     printf("Weight exceeds capacity of %s (%d kg)!\n",
@@ -336,7 +336,17 @@ int D = distance[src - 1][dest - 1];
                            cities[src - 1], cities[dest - 1]);
                     break;
                 }
+float R = rate_per_km[vType - 1];
+float S = speed[vType - 1];
+float E = fuel_efficiency[vType - 1];
 
+float deliveryCost = D * R * (1 + (W*1/10000));
+float fuelUsed = D / E;
+float fuelCost = fuelUsed * fuel_price;
+float totalCost = deliveryCost + fuelCost;
+float profit = deliveryCost * 0.25;
+float customerCharge = totalCost + profit;
+float timeHrs =D / S;
 }
 void viewDeliveries(){
 }
