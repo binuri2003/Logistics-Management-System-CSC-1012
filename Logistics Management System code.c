@@ -452,100 +452,124 @@ void viewDeliveries() {
             printf("Invalid choice! Please enter 1–3.\n");
     }
 }
-
-void routeFinder(){
- char cities[MAX_CITIES][CITY_N_LENTH];
+void routeFinder() {
+    char cities[MAX_CITIES][CITY_N_LENTH];
     int distance[MAX_CITIES][MAX_CITIES];
     int cityCount = 0;
+
     loadCities(cities, &cityCount);
     loadDistances(distance, cityCount);
-     if (cityCount < 2) {
+
+    if (cityCount < 2) {
         printf("Not enough cities to find a route!\n");
         return;
     }
 
+    int choice;
     printf("\n===== LEAST-COST ROUTE FINDER =====\n");
-    printf("Available Cities:\n");
-    for (int i = 0; i < cityCount; i++) {
-        printf("%d. %s\n", i + 1, cities[i]);
-    }
+    printf("1. Find Least-Cost Route\n");
+    printf("2. Return to Main Menu\n");
+    printf("3. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
 
-    int src, dest;
-    printf("\nEnter Source City Number: ");
-    scanf("%d", &src);
-    printf("Enter Destination City Number: ");
-    scanf("%d", &dest);
-    if (src < 1 || src > cityCount || dest < 1 || dest > cityCount) {
-        printf("Invalid city numbers!\n");
-        return;
-    }
-
-    src--;
-    dest--;
-
-    int cost[MAX_CITIES], visited[MAX_CITIES], prev[MAX_CITIES];
-    for (int i = 0; i < cityCount; i++) {
-        cost[i] = 999999;
-        visited[i] = 0;
-        prev[i] = -1;
-    }
-
-    cost[src] = 0;
-     for (int i = 0; i < cityCount - 1; i++) {
-        int min = 999999, u = -1;
-        for (int j = 0; j < cityCount; j++) {
-            if (!visited[j] && cost[j] < min) {
-                min = cost[j];
-                u = j;
+    switch (choice) {
+        case 1: {
+            printf("\nAvailable Cities:\n");
+            for (int i = 0; i < cityCount; i++) {
+                printf("%d. %s\n", i + 1, cities[i]);
             }
-        }
-        if (u == -1) break;
-        visited[u] = 1;
 
-        for (int v = 0; v < cityCount; v++) {
-            if (distance[u][v] > 0 && !visited[v] &&
-                cost[u] + distance[u][v] < cost[v]) {
-                cost[v] = cost[u] + distance[u][v];
-                prev[v] = u;
+            int src, dest;
+            printf("\nEnter Source City Number: ");
+            scanf("%d", &src);
+            printf("Enter Destination City Number: ");
+            scanf("%d", &dest);
+
+            if (src < 1 || src > cityCount || dest < 1 || dest > cityCount) {
+                printf("Invalid city numbers!\n");
+                break;
             }
+
+            src--;
+            dest--;
+
+            int cost[MAX_CITIES], visited[MAX_CITIES], prev[MAX_CITIES];
+            for (int i = 0; i < cityCount; i++) {
+                cost[i] = 999999;
+                visited[i] = 0;
+                prev[i] = -1;
+            }
+
+            cost[src] = 0;
+
+            for (int i = 0; i < cityCount - 1; i++) {
+                int min = 999999, u = -1;
+                for (int j = 0; j < cityCount; j++) {
+                    if (!visited[j] && cost[j] < min) {
+                        min = cost[j];
+                        u = j;
+                    }
+                }
+                if (u == -1) break;
+                visited[u] = 1;
+
+                for (int v = 0; v < cityCount; v++) {
+                    if (distance[u][v] > 0 && !visited[v] &&
+                        cost[u] + distance[u][v] < cost[v]) {
+                        cost[v] = cost[u] + distance[u][v];
+                        prev[v] = u;
+                    }
+                }
+            }
+
+            if (cost[dest] == 999999) {
+                printf("\nNo path found between %s and %s.\n", cities[src], cities[dest]);
+                break;
+            }
+
+            int path[MAX_CITIES], count = 0;
+            for (int v = dest; v != -1; v = prev[v]) {
+                path[count++] = v;
+            }
+
+            printf("\nShortest route from %s to %s:\n", cities[src], cities[dest]);
+            for (int i = count - 1; i >= 0; i--) {
+                printf("%s", cities[path[i]]);
+                if (i > 0) printf(" -> ");
+            }
+            printf("\nTotal Distance: %d km\n", cost[dest]);
+
+            FILE *fp = fopen("least_cost_route.txt", "a");
+            if (fp != NULL) {
+                fprintf(fp, "From %s to %s : ", cities[src], cities[dest]);
+                for (int i = count - 1; i >= 0; i--) {
+                    fprintf(fp, "%s", cities[path[i]]);
+                    if (i > 0) fprintf(fp, " -> ");
+                }
+                fprintf(fp, " | Distance: %d km\n", cost[dest]);
+                fclose(fp);
+                printf("Route saved to 'least_cost_route.txt' successfully!\n");
+            } else {
+                printf("Error saving route to file!\n");
+            }
+            break;
         }
-        }
 
-    if (cost[dest] == 999999) {
-        printf("No path found between %s and %s.\n", cities[src], cities[dest]);
-        return;
+        case 2:
+            printf("\nReturning to main menu...\n");
+            main();
+            return;
+
+        case 3:
+            exitProgram();
+            return;
+
+        default:
+            printf("\nInvalid choice! Please enter 1–3.\n");
     }
-
-
-    int path[MAX_CITIES], count = 0;
-    for (int v = dest; v != -1; v = prev[v]) {
-        path[count++] = v;
-    }
-
-    printf("\nShortest route from %s to %s:\n", cities[src], cities[dest]);
-    for (int i = count - 1; i >= 0; i--) {
-        printf("%s", cities[path[i]]);
-        if (i > 0) printf(" -> ");
-    }
-    printf("\nTotal Distance: %d km\n", cost[dest]);
-
-
-      FILE *fp = fopen("least_cost_route.txt", "a");
-    if (fp != NULL) {
-        fprintf(fp, "From %s to %s : ", cities[src], cities[dest]);
-        for (int i = count - 1; i >= 0; i--) {
-            fprintf(fp, "%s", cities[path[i]]);
-            if (i > 0) fprintf(fp, " -> ");
-        }
-        fprintf(fp, " | Distance: %d km\n", cost[dest]);
-        fclose(fp);
-        printf("Route saved to 'least_cost_route.txt' successfully!\n");
-    } else {
-        printf("Error saving route to file!\n");
-    }
-
 }
-void reports(){
+
    void reports() {
     struct Delivery deliveries[MAX_DELIVERIES];
     int count = 0;
@@ -591,9 +615,9 @@ void reports(){
             printf("Total Distance Covered     : %.2f km\n", totalDistance);
             printf("Average Delivery Time      : %.2f hours\n", avgTime);
             printf("Total Revenue              : %.2f LKR\n", totalRevenue);
-            printf("Total Profit (25%%)         : %.2f LKR\n", profit);
-            printf("Longest Route (approx)     : %.2f km\n", longest);
-            printf("Shortest Route (approx)    : %.2f km\n", shortest);
+            printf("Total Profit (25%%)        : %.2f LKR\n", profit);
+            printf("Longest Route              : %.2f km\n", longest);
+            printf("Shortest Route             : %.2f km\n", shortest);
             printf("====================================\n");
             break;
         }
@@ -612,8 +636,6 @@ void reports(){
     }
 }
 
-
-}
 void help(){
 
    int choice;
