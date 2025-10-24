@@ -280,7 +280,7 @@ void deliveryRequest(){
  loadDistances(distance, cityCount);
 
  int choice;
- printf("\n===== DELIVERY REQUEST HANDLING =====\n");
+        printf("\n===== DELIVERY REQUEST HANDLING =====\n");
         printf("1. New Delivery\n");
         printf("2. Return to Main Menu\n");
         printf("3. Exit\n");
@@ -385,6 +385,36 @@ void routeFinder(){
 void reports(){
 }
 void help(){
+
+   int choice;
+    printf("\n======= Help & Support =======\n");
+    printf("If you experience any issues or need assistance,\n");
+    printf("please contact our support team:\n\n");
+
+    printf("Email   : support@flashlogistics.com\n");
+    printf("Phone   : +94 77 123 4567\n");
+    printf("Address : Flash Logistics Management (Pvt) Ltd,\n");
+    printf("          No. 25, Wijerama,\n");
+    printf("          Colombo, Sri Lanka.\n");
+    printf("==============================\n");
+
+    printf("1. Return to Main Menu\n");
+    printf("2. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+    switch (choice) {
+         case 1:
+                printf("\nReturning to main menu...\n");
+                main();
+                return;
+
+            case 2:
+                exitProgram();
+                return;
+
+            default:
+                printf("Invalid choice! Please enter 1–3.\n");
+        }
 }
 void save(){
 }
