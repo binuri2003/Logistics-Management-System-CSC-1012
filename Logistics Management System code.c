@@ -810,7 +810,7 @@ void viewCities(char cities[][CITY_N_LENTH],int count){
 void loadDistances(int distance[MAX_CITIES][MAX_CITIES], int cityCount) {
     FILE *fp = fopen(DIST_FILE, "r");
     if (fp == NULL) {
-        // file doesn't exist: init to zeros and return
+
         for (int i = 0; i < cityCount; i++)
             for (int j = 0; j < cityCount; j++)
                 distance[i][j] = 0;
@@ -820,7 +820,7 @@ void loadDistances(int distance[MAX_CITIES][MAX_CITIES], int cityCount) {
     for (int i = 0; i < cityCount; i++) {
         for (int j = 0; j < cityCount; j++) {
             if (fscanf(fp, "%d", &distance[i][j]) != 1) {
-                distance[i][j] = 0; // if file shorter, default 0
+                distance[i][j] = 0;
             }
         }
     }
