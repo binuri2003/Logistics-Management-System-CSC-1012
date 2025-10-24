@@ -279,7 +279,7 @@ void vehicleInfo(){
 }
 void deliveryRequest(){
  char cities[MAX_CITIES][CITY_N_LENTH];
- int distance[MAX_CITIES][MAX_CITIES];
+ int distance[MAX_CITIES][MAX_CITIES]={0};
  int cityCount = 0;
 
  loadCities(cities, &cityCount);
@@ -368,7 +368,7 @@ float timeHrs =D / S;
                 printf("Customer Charge: %.2f LKR\n", customerCharge);
                 printf("Estimated Time: %.2f hours\n", timeHrs);
                 printf("======================================================\n");
-                break;
+
                 struct Delivery d;
                strcpy(d.source, cities[src - 1]);
                strcpy(d.destination, cities[dest - 1]);
@@ -379,6 +379,7 @@ float timeHrs =D / S;
                saveDelivery(d);
 
 printf("Delivery saved successfully!\n");
+break;
             }
             case 2:
                 printf("\nReturning to main menu...\n");
@@ -633,6 +634,7 @@ void loadDistances(int distance[MAX_CITIES][MAX_CITIES], int cityCount) {
     for (int i = 0; i < cityCount; i++) {
         for (int j = 0; j < cityCount; j++) {
             fscanf(fp, "%d", &distance[i][j]);
+            distance[i][j];
         }
     }
     fclose(fp);
