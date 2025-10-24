@@ -7,13 +7,22 @@
 #define MAX_DELIVERIES 50
 #define CITY_FILE "cities.txt"
 #define DIST_FILE "distances.txt"
+#define DELIVERY_FILE "deliveries.txt"
 
-char vehicle_names[3][10] = {"Van", "Truck", "Lorry"};
+    char vehicle_names[3][10] = {"Van", "Truck", "Lorry"};
     int capacity[3] = {1000, 5000, 10000};
     int rate_per_km[3] = {30, 40, 80};
     int speed[3] = {60, 50, 45};
     int fuel_efficiency[3] = {12, 6, 4};
     float fuel_price = 310.0;
+    struct Delivery {
+    char source[50];
+    char destination[50];
+    char vehicle[10];
+    float weight;
+    float cost;
+    float time;
+    };
 
 
 //function declaration
@@ -35,7 +44,8 @@ void save();
 void exitProgram();
 void loadDistances();
 void saveDistances();
-
+void saveDelivery();
+void loadDeliveries();
 
 
 int main()
@@ -55,10 +65,9 @@ int main()
     printf("6. Route Finder\n");
     printf("7. Reports\n");
     printf("8. Help\n");
-    printf("9. Save\n");
-    printf("10. Exit\n");
+    printf("9. Exit\n");
 
-    printf("Enter your Choice (1-10):\n");
+    printf("Enter your Choice (1-9):\n");
     scanf("%d",&choice);
 
     switch(choice){
@@ -85,10 +94,7 @@ int main()
              break;
             case 8: help();
              break;
-             case 9:
-                save();
-             break;
-            case 10:
+            case 9:
                 exitProgram();
                 return 0;
 
@@ -363,6 +369,16 @@ float timeHrs =D / S;
                 printf("Estimated Time: %.2f hours\n", timeHrs);
                 printf("======================================================\n");
                 break;
+                struct Delivery d;
+               strcpy(d.source, cities[src - 1]);
+               strcpy(d.destination, cities[dest - 1]);
+               strcpy(d.vehicle, vehicle_names[vType - 1]);
+               d.weight = W;
+               d.cost = customerCharge;
+               d.time = timeHrs;
+               saveDelivery(d);
+
+printf("Delivery saved successfully!\n");
             }
             case 2:
                 printf("\nReturning to main menu...\n");
@@ -378,8 +394,58 @@ float timeHrs =D / S;
         }
     }
 
-void viewDeliveries(){
+void viewDeliveries() {
+    struct Delivery deliveries[MAX_DELIVERIES];
+    int count = 0;
+
+    loadDeliveries(deliveries, &count);
+
+    int choice;
+    printf("\n===== VIEW ALL DELIVERIES =====\n");
+    printf("1. View all deliveries\n");
+    printf("2. Return to Main Menu\n");
+    printf("3. Exit\n");  // Added Exit option
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1:
+            if (count == 0) {
+                printf("No deliveries recorded yet!\n");
+                return;
+            }
+
+            printf("\n%-5s %-15s %-15s %-10s %-10s %-10s\n",
+                   "No", "Source", "Destination", "Vehicle", "Weight", "Cost(LKR)");
+            printf("-------------------------------------------------------------\n");
+
+            for (int i = 0; i < count; i++) {
+                printf("%-5d %-15s %-15s %-10s %-10.1f %-10.2f\n",
+                       i + 1,
+                       deliveries[i].source,
+                       deliveries[i].destination,
+                       deliveries[i].vehicle,
+                       deliveries[i].weight,
+                       deliveries[i].cost);
+            }
+
+            printf("-------------------------------------------------------------\n");
+            break;
+
+        case 2:
+            printf("\nReturning to main menu...\n");
+            main();
+            return;
+
+        case 3:
+            exitProgram();  // Exit the program
+            return;
+
+        default:
+            printf("Invalid choice! Please enter 1–3.\n");
+    }
 }
+
 void routeFinder(){
 }
 void reports(){
@@ -416,8 +482,7 @@ void help(){
                 printf("Invalid choice! Please enter 1–3.\n");
         }
 }
-void save(){
-}
+
 void exitProgram(){
     char choice;
 
@@ -588,3 +653,36 @@ void saveDistances(int distance[MAX_CITIES][MAX_CITIES], int cityCount) {
     }
     fclose(fp);
 }
+// delivery request function"s sub function
+void saveDelivery(struct Delivery d) {
+    FILE *fp = fopen(DELIVERY_FILE, "a");
+    if (fp == NULL) {
+        printf("Error saving delivery!\n");
+        return;
+    }
+
+    fprintf(fp, "%s %s %s %.2f %.2f %.2f\n",
+            d.source, d.destination, d.vehicle, d.weight, d.cost, d.time);
+    fclose(fp);
+}
+//view delivery function's sub function
+void loadDeliveries(struct Delivery deliveries[], int *count) {
+    FILE *fp = fopen(DELIVERY_FILE, "r");
+    if (fp == NULL) {
+        *count = 0;
+        return;
+    }
+
+    while (fscanf(fp, "%s %s %s %f %f %f",
+                  deliveries[*count].source,
+                  deliveries[*count].destination,
+                  deliveries[*count].vehicle,
+                  &deliveries[*count].weight,
+                  &deliveries[*count].cost,
+                  &deliveries[*count].time) == 6) {
+        (*count)++;
+        if (*count >= MAX_DELIVERIES) break;
+    }
+    fclose(fp);
+}
+
