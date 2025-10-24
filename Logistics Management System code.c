@@ -546,6 +546,73 @@ void routeFinder(){
 
 }
 void reports(){
+   void reports() {
+    struct Delivery deliveries[MAX_DELIVERIES];
+    int count = 0;
+    loadDeliveries(deliveries, &count);
+
+    int choice;
+
+    printf("\n===== REPORTS =====\n");
+    printf("1. View Reports\n");
+    printf("2. Return to Main Menu\n");
+    printf("3. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1: {
+            if (count == 0) {
+                printf("\nNo delivery records found!\n");
+                break;
+            }
+
+            float totalDistance = 0, totalTime = 0, totalRevenue = 0;
+            float longest = 0, shortest = 999999;
+
+
+            for (int i = 0; i < count; i++) {
+                float distance = deliveries[i].cost / 100;
+                totalDistance += distance;
+                totalTime += deliveries[i].time;
+                totalRevenue += deliveries[i].cost;
+
+                if (distance > longest)
+                    longest = distance;
+                if (distance < shortest)
+                    shortest = distance;
+            }
+
+            float avgTime = totalTime / count;
+            float profit = totalRevenue * 0.25;
+
+            printf("\n========== DELIVERY REPORT ==========\n");
+            printf("Total Deliveries Completed : %d\n", count);
+            printf("Total Distance Covered     : %.2f km\n", totalDistance);
+            printf("Average Delivery Time      : %.2f hours\n", avgTime);
+            printf("Total Revenue              : %.2f LKR\n", totalRevenue);
+            printf("Total Profit (25%%)         : %.2f LKR\n", profit);
+            printf("Longest Route (approx)     : %.2f km\n", longest);
+            printf("Shortest Route (approx)    : %.2f km\n", shortest);
+            printf("====================================\n");
+            break;
+        }
+
+        case 2:
+            printf("\nReturning to main menu...\n");
+            main();
+            return;
+
+        case 3:
+            exitProgram();
+            return;
+
+        default:
+            printf("Invalid choice! Please enter 1–3.\n");
+    }
+}
+
+
 }
 void help(){
 
