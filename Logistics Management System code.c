@@ -9,30 +9,32 @@
 #define DIST_FILE "distances.txt"
 #define DELIVERY_FILE "deliveries.txt"
 
-    char vehicle_names[3][10] = {"Van", "Truck", "Lorry"};
-    int capacity[3] = {1000, 5000, 10000};
-    int rate_per_km[3] = {30, 40, 80};
-    int speed[3] = {60, 50, 45};
-    int fuel_efficiency[3] = {12, 6, 4};
-    float fuel_price = 310.0;
-    struct Delivery {
+char vehicle_names[3][10] = {"Van", "Truck", "Lorry"};
+int capacity[3] = {1000, 5000, 10000};
+int rate_per_km[3] = {30, 40, 80};
+int speed[3] = {60, 50, 45};
+int fuel_efficiency[3] = {12, 6, 4};
+float fuel_price = 310.0;
+
+struct Delivery {
     char source[50];
     char destination[50];
     char vehicle[10];
     float weight;
     float cost;
     float time;
-    };
+};
 
 
 //function declaration
 void cityManagement();
-void addCity();
-void renameCity();
-void removeCity();
-void viewCities();
-void loadCities();
-void saveCities();
+void addCity(char cities[][CITY_N_LENTH],int*count);
+void renameCity(char cities[][CITY_N_LENTH], int count);
+void removeCity(char cities[][CITY_N_LENTH], int *count);
+void viewCities(char cities[][CITY_N_LENTH], int count);
+void loadCities(char cities[][CITY_N_LENTH], int *count);
+void saveCities(char cities[][CITY_N_LENTH], int count);
+
 void distanceManagement();
 void vehicleInfo();
 void deliveryRequest();
@@ -42,10 +44,12 @@ void reports();
 void help();
 void save();
 void exitProgram();
-void loadDistances();
-void saveDistances();
-void saveDelivery();
-void loadDeliveries();
+
+void loadDistances(int distance[MAX_CITIES][MAX_CITIES],int cityCount);
+void saveDistances(int distance[MAX_CITIES][MAX_CITIES],int cityCount);
+
+void saveDelivery(struct Delivery d);
+void loadDeliveries(struct Delivery deliveries[],int*count);
 
 
 int main()
@@ -156,6 +160,7 @@ void distanceManagement(){
     char cities[MAX_CITIES][CITY_N_LENTH];
     int count = 0;
     int choice;
+    memset(distance,0,sizeof(distance));
 
     loadCities(cities, &count);
     if (count < 2) {
@@ -196,6 +201,7 @@ void distanceManagement(){
                 if (i == j) {
                     printf("Distance from a city to itself is  0 km.\n");
                     distance[i - 1][j - 1] = 0;
+                    saveDistances(distance,count);
                     break;
                 }
 
@@ -405,7 +411,7 @@ void viewDeliveries() {
     printf("\n===== VIEW ALL DELIVERIES =====\n");
     printf("1. View all deliveries\n");
     printf("2. Return to Main Menu\n");
-    printf("3. Exit\n");  // Added Exit option
+    printf("3. Exit\n");
     printf("Enter your choice: ");
     scanf("%d", &choice);
 
@@ -439,7 +445,7 @@ void viewDeliveries() {
             return;
 
         case 3:
-            exitProgram();  // Exit the program
+            exitProgram();
             return;
 
         default:
@@ -448,6 +454,7 @@ void viewDeliveries() {
 }
 
 void routeFinder(){
+
 }
 void reports(){
 }
@@ -625,6 +632,7 @@ void viewCities(char cities[][CITY_N_LENTH],int count){
 void loadDistances(int distance[MAX_CITIES][MAX_CITIES], int cityCount) {
     FILE *fp = fopen(DIST_FILE, "r");
     if (fp == NULL) {
+        // file doesn't exist: init to zeros and return
         for (int i = 0; i < cityCount; i++)
             for (int j = 0; j < cityCount; j++)
                 distance[i][j] = 0;
@@ -633,12 +641,14 @@ void loadDistances(int distance[MAX_CITIES][MAX_CITIES], int cityCount) {
 
     for (int i = 0; i < cityCount; i++) {
         for (int j = 0; j < cityCount; j++) {
-            fscanf(fp, "%d", &distance[i][j]);
-            distance[i][j];
+            if (fscanf(fp, "%d", &distance[i][j]) != 1) {
+                distance[i][j] = 0; // if file shorter, default 0
+            }
         }
     }
     fclose(fp);
 }
+
 
 void saveDistances(int distance[MAX_CITIES][MAX_CITIES], int cityCount) {
     FILE *fp = fopen(DIST_FILE, "w");
@@ -683,7 +693,8 @@ void loadDeliveries(struct Delivery deliveries[], int *count) {
                   &deliveries[*count].cost,
                   &deliveries[*count].time) == 6) {
         (*count)++;
-        if (*count >= MAX_DELIVERIES) break;
+        if (*count >= MAX_DELIVERIES)
+            break;
     }
     fclose(fp);
 }
