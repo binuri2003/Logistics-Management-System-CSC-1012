@@ -251,14 +251,9 @@ void vehicleInfo(){
         switch (choice) {
             case 1:
                 printf("\n=== VEHICLES ===\n");
-                printf("Type\tCapacity(kg)\tRate per km(LKR)\tAvg Speed(km/h)\tFuel Efficiency(km/l)\n");
+               printf("%-10s %-15s %-20s %-20s %-20s\n", "Type", "Capacity(kg)", "Rate per km(LKR)", "Avg Speed(km/h)", "Fuel Efficiency(km/l)");
                 for (int i = 0; i < 3; i++) {
-                    printf("%s\t%d\t\t%d\t\t%d\t\t%d\n",
-                           vehicle_names[i],
-                           capacity[i],
-                           rate_per_km[i],
-                           speed[i],
-                           fuel_efficiency[i]);
+                     printf("%-10s %-15d %-20d %-20d %-20d\n",vehicle_names[i],capacity[i],rate_per_km[i],speed[i],fuel_efficiency[i]);
                 }
                 break;
 
@@ -326,10 +321,11 @@ void deliveryRequest(){
                 printf("Enter Weight (in kg): ");
                 scanf("%f", &W);
 
-                if (weight > capacity[vType - 1]) {
+                if (W > capacity[vType - 1]) {
                     printf("Weight exceeds capacity of %s (%d kg)!\n",
                            vehicle_names[vType - 1], capacity[vType - 1]);
                     break;
+                }
 int D = distance[src - 1][dest - 1];
                 if (D <= 0) {
                     printf("No valid distance found between %s and %s.\n",
@@ -339,15 +335,16 @@ int D = distance[src - 1][dest - 1];
 float R = rate_per_km[vType - 1];
 float S = speed[vType - 1];
 float E = fuel_efficiency[vType - 1];
+float fuel_price = 310;
 
-float deliveryCost = D * R * (1 + (W*1/10000));
+float deliveryCost = D * R * (1 + (W/10000));
 float fuelUsed = D / E;
 float fuelCost = fuelUsed * fuel_price;
 float totalCost = deliveryCost + fuelCost;
 float profit = deliveryCost * 0.25;
 float customerCharge = totalCost + profit;
 float timeHrs =D / S;
-printf("\n======================================================\n");
+                printf("\n======================================================\n");
                 printf("DELIVERY COST ESTIMATION\n");
                 printf("------------------------------------------------------\n");
                 printf("From: %s\n", cities[src - 1]);
@@ -356,7 +353,7 @@ printf("\n======================================================\n");
                 printf("Vehicle: %s\n", vehicle_names[vType - 1]);
                 printf("Weight: %.0f kg\n", W);
                 printf("------------------------------------------------------\n");
-                printf("Base Cost: %d × %.0f × (1 + %.0f/10000) = %.2f LKR\n",
+                printf("Base Cost: %d * %.0f * (1 + %.0f/10000) = %.2f LKR\n",
                        D, R, W, deliveryCost);
                 printf("Fuel Used: %.2f L\n", fuelUsed);
                 printf("Fuel Cost: %.2f LKR\n", fuelCost);
@@ -380,7 +377,7 @@ printf("\n======================================================\n");
                 printf("Invalid choice! Please enter 1–3.\n");
         }
     }
-}
+
 void viewDeliveries(){
 }
 void routeFinder(){
