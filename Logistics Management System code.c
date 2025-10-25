@@ -8,6 +8,7 @@
 #define CITY_FILE "cities.txt"
 #define DIST_FILE "distances.txt"
 #define DELIVERY_FILE "deliveries.txt"
+#define ROUTE_FILE "least_cost_route.txt"
 
 char vehicle_names[3][10] = {"Van", "Truck", "Lorry"};
 int capacity[3] = {1000, 5000, 10000};
@@ -570,7 +571,7 @@ void routeFinder() {
     }
 }
 
-   void reports() {
+void reports() {
     struct Delivery deliveries[MAX_DELIVERIES];
     int count = 0;
     loadDeliveries(deliveries, &count);

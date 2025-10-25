@@ -1,1 +1,4 @@
 Negambo Galle Van 40.00 9839.92 2.58
+Hambanthota Jaffna Lorry 67.00 93895.59 11.71
+Kegalle Negambo Truck 89.00 6637.26 1.30
+Colombo Kegalle Van 78.00 5344.57 1.40
